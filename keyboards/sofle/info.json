@@ -3,9 +3,9 @@
     "features": {
         "bootmagic": true,
         "extrakey": true,
-        "mousekey": true,
+        "mousekey": false,
         "nkro": true,
-        "encoder": true,
+        "encoder": false,
         "oled": true
     },
     "build": {

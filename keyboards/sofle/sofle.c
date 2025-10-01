@@ -65,40 +65,59 @@ static void render_logo(void) {
 }
 
 void print_status_narrow(void) {
-    oled_write_P(PSTR("\n\n"), false);
+    oled_write_P(PSTR("LAYER"), false);
     switch (get_highest_layer(layer_state)) {
         case 0:
-            oled_write_ln_P(PSTR("Qwrt"), false);
+            oled_write_ln_P(PSTR("home"), false);
             break;
         case 1:
-            oled_write_ln_P(PSTR("Clmk"), false);
-            break;
-        default:
-            oled_write_P(PSTR("Mod\n"), false);
-            break;
-    }
-    oled_write_P(PSTR("\n\n"), false);
-    oled_write_ln_P(PSTR("LAYER"), false);
-    switch (get_highest_layer(layer_state)) {
-        case 0:
-        case 1:
-            oled_write_P(PSTR("Base\n"), false);
+            oled_write_ln_P(PSTR("symb"), true);
             break;
         case 2:
-            oled_write_P(PSTR("Lower"), false);
-            break;
-        case 3:
-            oled_write_P(PSTR("Raise"), false);
-            break;
-        case 4:
-            oled_write_P(PSTR("Adjust"), false);
+            oled_write_ln_P(PSTR("nav"), true);
             break;
         default:
-            oled_write_ln_P(PSTR("Undef"), false);
+            oled_write_P(PSTR("\n"), false);
+            break;
     }
-    oled_write_P(PSTR("\n\n"), false);
+
+    oled_write_ln_P(PSTR("\n\n\nGAME\nMODE"), false);
+    oled_write_ln_P(PSTR("off"), false);
+
+    oled_write_P(PSTR("\n\n\n"), false);
     led_t led_usb_state = host_keyboard_led_state();
     oled_write_ln_P(PSTR("CPSLK"), led_usb_state.caps_lock);
+    oled_write_P(PSTR("\n\n\n"), false);
+}
+
+void print_game_mode_on(void) {
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
+
+    oled_write_ln_P(PSTR("\nGAME\nMODE"), false);
+    oled_write_ln_P(PSTR("ON\n"), false);
+
+    switch (get_highest_layer(layer_state)) {
+        case 4:
+            oled_write_ln_P(PSTR("m1"), false);
+            break;
+        case 5:
+            oled_write_ln_P(PSTR("m2"), false);
+            break;
+        default:
+            oled_write_ln_P(PSTR("-"), false);
+            break;
+    }
+
+    oled_write_P(PSTR("\n"), false);
+    oled_write_P(PSTR("\n"), true);
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
+    oled_write_P(PSTR("     "), true);
 }
 
 bool oled_task_kb(void) {
@@ -106,7 +125,12 @@ bool oled_task_kb(void) {
         return false;
     }
     if (is_keyboard_master()) {
-        print_status_narrow();
+        // render_logo();
+        if (get_highest_layer(layer_state) >= 3 && get_highest_layer(layer_state) <= 5) {
+            print_game_mode_on();
+        } else {
+            print_status_narrow();
+        }
     } else {
         render_logo();
     }
